@@ -26,47 +26,62 @@ public class BookFunctionsTest {
 
     @Test
     public void shouldReturnBookBasedOnISBN() {
-        int restableISBN = 1111111111;
-        Book testableBook = bookFunctions.returnBookBasedOnProvidedISBNWIthStream(books, restableISBN);
+        int testableISBN = 1111111111;
+        Book testableBookWithStream = bookFunctions.returnBookBasedOnProvidedISBNWIthStream(books, testableISBN);
+        Book testableBook = bookFunctions.returnBookBasedOnProvidedISBN(books, testableISBN);
+        assertThat(testableBookWithStream).isEqualTo(books.get(3));
         assertThat(testableBook).isEqualTo(books.get(3));
     }
 
     @Test
     public void shouldReturnSumOfYears() {
-        int expectedValue = 8048;
+        int expectedValue = 8037;
         int actualValue = bookFunctions.returnSumOfAllYearsFromBookWithStream(books);
+        int actualValueUsingStandardMethod = bookFunctions.returnSumOfAllYearsFromBook(books);
         assertThat(expectedValue).isEqualTo(actualValue);
+        assertThat(expectedValue).isEqualTo(actualValueUsingStandardMethod);
+
     }
 
     @Test
     public void shouldReturnTwoBooksReleasedAfter2007() {
         long expectedValue = 2;
         long actualValue = bookFunctions.returnNumberOfBooksReleasedAfter2007WithStream(books);
+        long actualValueUsingStandardMethod = bookFunctions.returnNumberOfBooksReleasedAfter2007(books);
         assertThat(expectedValue).isEqualTo(actualValue);
+        assertThat(expectedValue).isEqualTo(actualValueUsingStandardMethod);
     }
 
     @Test
     public void shouldReturnTrueBasedOnTheNumberOfReleased() {
-        boolean actualValue = bookFunctions.reutrnBooleansBasedOnNumberOfBooksReleasedAfter2000(books);
+        boolean actualValue = bookFunctions.returnBooleansBasedOnNumberOfBooksReleasedAfter2000(books);
+        boolean actualValueWithLambda = bookFunctions.returnBooleansBasedOnNumberOfBooksReleasedAfter2000WithLambda(books);
         Assertions.assertTrue(actualValue);
+        Assertions.assertTrue(actualValueWithLambda);
     }
 
     @Test
     public void shouldReturnBookWIthYear2002() {
         Book testableBook = bookFunctions.returnTheOldestBookWithStream(books);
+        Book testableBookUsingStandardMethod = bookFunctions.returnTheOldestBook(books);
         assertThat(testableBook).isEqualTo(books.get(2));
+        assertThat(testableBookUsingStandardMethod).isEqualTo(books.get(2));
     }
 
     @Test
     public void shouldReturnBookWIthYear2017() {
         Book testableBook = bookFunctions.returnTheLatestBookWithStream(books);
+        Book testableBookUsingStandardMethod = bookFunctions.returnTheLatestBook(books);
         assertThat(testableBook).isEqualTo(books.get(0));
+        assertThat(testableBookUsingStandardMethod).isEqualTo(books.get(0));
     }
 
     @Test
     public void shouldReturnTwoLastElementsInTheList() {
 
         List<Book> testableBooks = bookFunctions.returnTheLatestTwoBooks(books);
+        List<Book> testableBooksWithStream = bookFunctions.returnTheLatestTwoBooksWithStream(books);
         assertThat(testableBooks).isEqualTo(books.subList(2, 4));
+        assertThat(testableBooksWithStream).isEqualTo(books.subList(2, 4));
     }
 }
