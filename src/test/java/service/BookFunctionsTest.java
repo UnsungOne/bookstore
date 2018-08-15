@@ -19,7 +19,7 @@ public class BookFunctionsTest {
     @BeforeAll
     public static void setup() {
         books.add(new Book(1, "Lambda in use", 1231231234, 2017, CoverType.M, null, null));
-        books.add(new Book(2, "Effective Tomcat", 1231231235, 2012, CoverType.T, null, null));
+        books.add(new Book(2, "Creative programming", 1231231235, 2012, CoverType.T, null, null));
         books.add(new Book(3, "Spring in use", 2131231234, 2002, CoverType.M, null, null));
         books.add(new Book(4, "Effective Tomcat", 1111111111, 2006, CoverType.M, null, null));
     }
@@ -84,4 +84,31 @@ public class BookFunctionsTest {
         assertThat(testableBooks).isEqualTo(books.subList(2, 4));
         assertThat(testableBooksWithStream).isEqualTo(books.subList(2, 4));
     }
+
+    @Test
+    public void shouldReturnAverageNumberForYear() {
+
+        double expectedAverageYearValue = 2009.25;
+        double actualAverageYearValue = bookFunctions.returnAveragePublishYearWithStream(books);
+        double actualAverageYearValueUsingStandardMethod = bookFunctions.returnAveragePublishYear(books);
+        assertThat(expectedAverageYearValue).isEqualTo(actualAverageYearValue);
+        assertThat(expectedAverageYearValue).isEqualTo(actualAverageYearValueUsingStandardMethod);
+
+    }
+
+    @Test
+    public void shouldReturnTrueIfAnyBookIsPublishedBefore2003() {
+        boolean actualValueWithLambda = bookFunctions.checkIfAnyBookHasBeenReleasedBefore2003WithStream(books);
+        boolean actualValue = bookFunctions.checkIfAnyBookHasBeenReleasedBefore2003(books);
+        Assertions.assertTrue(actualValueWithLambda);
+        Assertions.assertTrue(actualValue);
+    }
+
+    @Test
+    public void shouldBookAtIndexOne() {
+        Book testableBooksWithStream = bookFunctions.returnAllBooksMeetingConditionsWithStream(books);
+        assertThat(testableBooksWithStream).isEqualTo(books.get(1));
+    }
+
+
 }

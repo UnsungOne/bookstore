@@ -26,7 +26,7 @@ public class BookFunctions {
 
 
     public int returnSumOfAllYearsFromBookWithStream(List<Book> books) {
-        return  books.stream()
+        return books.stream()
                 .mapToInt(Book::getYear)
                 .sum();
     }
@@ -61,8 +61,6 @@ public class BookFunctions {
         for (Book book : books) {
             if (book.getYear() > 2000) {
                 return true;
-            } else {
-                return false;
             }
         }
         return false;
@@ -79,17 +77,17 @@ public class BookFunctions {
                 .min(Comparator.comparing(Book::getYear))
                 .get();
     }
-    
-    public Book returnTheOldestBook(List<Book>books){
 
-         return Collections.min(books, new Comparator<Book>() {
+    public Book returnTheOldestBook(List<Book> books) {
+
+        return Collections.min(books, new Comparator<Book>() {
             @Override
             public int compare(Book o1, Book o2) {
                 return Integer.compare(o1.getYear(), o2.getYear());
             }
         });
     }
-    
+
 
     public Book returnTheLatestBookWithStream(List<Book> books) {
 
@@ -98,7 +96,7 @@ public class BookFunctions {
                 .get();
     }
 
-    public Book returnTheLatestBook(List<Book> books){
+    public Book returnTheLatestBook(List<Book> books) {
 
         return Collections.max(books, new Comparator<Book>() {
             @Override
@@ -125,5 +123,59 @@ public class BookFunctions {
             finalList.add(books.get(i));
         }
         return finalList;
+    }
+
+    public double returnAveragePublishYear(List<Book> books) {
+
+        double yearSum = 0;
+        double averageYearValue = 0;
+        for (int i = 0; i < books.size(); i++) {
+            yearSum += books.get(i).getYear();
+            averageYearValue = yearSum / books.size();
+        }
+
+        return averageYearValue;
+
+    }
+
+    public double returnAveragePublishYearWithStream(List<Book> books) {
+
+        return books.stream()
+                .mapToDouble(Book::getYear)
+                .average()
+                .getAsDouble();
+    }
+
+    public boolean checkIfAnyBookHasBeenReleasedBefore2003WithStream(List<Book> books) {
+
+        return books.stream()
+                .anyMatch(e -> e.getYear() < 2003);
+    }
+
+    public boolean checkIfAnyBookHasBeenReleasedBefore2003(List<Book> books) {
+
+        for (Book book : books) {
+            if (book.getYear() < 2003) {
+                return true;
+
+            }
+        }
+        return false;
+
+    }
+
+    public Book returnAllBooksMeetingConditionsWithStream(List<Book> books) {
+
+        return books.stream()
+                .filter(e -> e.getName().startsWith("C") && e.getYear() > 2010)
+                .findAny()
+                .get();
+    }
+
+    public Book returnAllBooksMeetingConditions(List<Book> books) {
+
+             //TODO
+
+        return null;
     }
 }
