@@ -3,6 +3,7 @@ package pojo;
 
 import lombok.*;
 
+import java.util.Comparator;
 import java.util.List;
 
 @AllArgsConstructor
@@ -15,5 +16,4 @@ public class Book {
     private CoverType coverType;
     private List<Author> authors;
     private Category category;
-
 }

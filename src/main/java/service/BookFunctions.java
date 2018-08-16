@@ -173,9 +173,50 @@ public class BookFunctions {
     }
 
     public Book returnAllBooksMeetingConditions(List<Book> books) {
+        Book selectedBook = null;
+        for (int i = 0; i < books.size(); i++) {
+            if (books.get(i).getYear() > 2010 && books.get(i).getName().startsWith("C")) {
+                selectedBook = books.get(i);
+            }
+        }
 
-             //TODO
-
-        return null;
+        return selectedBook;
     }
+
+    public List<Book> sortBooksByTheOldestBookWithStream(List<Book> books) {
+        return books.stream()
+                .sorted(Comparator.comparing(Book::getYear))
+                .collect(Collectors.toList());
+    }
+
+    public List<Book> sortBooksByTheOldest(List<Book> books) {
+
+        Collections.sort(books, new Comparator<Book>() {
+            @Override
+            public int compare(Book o1, Book o2) {
+                return o1.getYear() - o2.getYear();
+            }
+        });
+        return books;
+    }
+
+
+    public List<Book> sortBooksByTheLatestBookWithStream(List<Book> books) {
+        return books.stream()
+                .sorted(Comparator.comparing(Book::getYear).reversed())
+                .collect(Collectors.toList());
+    }
+
+    public List<Book> sortBooksByTheLatest(List<Book> books) {
+
+        Collections.sort(books, new Comparator<Book>() {
+            @Override
+            public int compare(Book o1, Book o2) {
+                return o2.getYear() - o1.getYear();
+            }
+        });
+
+        return books;
+    }
+
 }

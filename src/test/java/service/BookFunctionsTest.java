@@ -7,7 +7,9 @@ import pojo.Book;
 import pojo.CoverType;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -107,8 +109,33 @@ public class BookFunctionsTest {
     @Test
     public void shouldBookAtIndexOne() {
         Book testableBooksWithStream = bookFunctions.returnAllBooksMeetingConditionsWithStream(books);
+        Book testableBook = bookFunctions.returnAllBooksMeetingConditions(books);
+        assertThat(testableBook).isEqualTo(books.get(1));
         assertThat(testableBooksWithStream).isEqualTo(books.get(1));
     }
 
+    @Test
+    public void shouldReturnTheBookSortedFromTheOldestToTheLatest() {
+        List<Book> testableBooks = bookFunctions.sortBooksByTheOldestBookWithStream(books);
+        List<Book> testableBooksUsingStandardWay = bookFunctions.sortBooksByTheOldest(books);
+        assertThat(testableBooks).isEqualTo(books.stream()
+                .sorted(Comparator.comparing(Book::getYear))
+                .collect(Collectors.toList()));
+        assertThat(testableBooksUsingStandardWay).isEqualTo(books.stream()
+                .sorted(Comparator.comparing(Book::getYear))
+                .collect(Collectors.toList()));
+    }
+
+    @Test
+    public void shouldReturnTheBookSortedFromTheLatestToTheOldest() {
+        List<Book> testableBooks = bookFunctions.sortBooksByTheLatest(books);
+        List<Book> testableBooksUsingStandardWay = bookFunctions.sortBooksByTheLatest(books);
+        assertThat(testableBooks).isEqualTo(books.stream()
+                .sorted(Comparator.comparing(Book::getYear).reversed())
+                .collect(Collectors.toList()));
+        assertThat(testableBooksUsingStandardWay).isEqualTo(books.stream()
+                .sorted(Comparator.comparing(Book::getYear).reversed())
+                .collect(Collectors.toList()));
+    }
 
 }
