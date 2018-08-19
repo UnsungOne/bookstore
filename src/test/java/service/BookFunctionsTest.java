@@ -9,9 +9,11 @@ import pojo.CoverType;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertFalse;
 
 public class BookFunctionsTest {
 
@@ -29,10 +31,15 @@ public class BookFunctionsTest {
     @Test
     public void shouldReturnBookBasedOnISBN() {
         int testableISBN = 1111111111;
-        Book testableBookWithStream = bookFunctions.returnBookBasedOnProvidedISBNWIthStream(books, testableISBN);
         Book testableBook = bookFunctions.returnBookBasedOnProvidedISBN(books, testableISBN);
-        assertThat(testableBookWithStream).isEqualTo(books.get(3));
-        assertThat(testableBook).isEqualTo(books.get(3));
+        assertThat(testableBook.getISBN()).isEqualTo(1111111111);
+    }
+
+    @Test
+    void shouldNotReturnAnyData() {
+        int testableISBN = 1111111112;
+        Optional<Book> testableBookWithStream = bookFunctions.returnBookBasedOnProvidedISBNWIthStream(books, testableISBN);
+        assertFalse(testableBookWithStream.isPresent());
     }
 
     @Test
@@ -128,7 +135,7 @@ public class BookFunctionsTest {
 
     @Test
     public void shouldReturnTheBookSortedFromTheLatestToTheOldest() {
-        List<Book> testableBooks = bookFunctions.sortBooksByTheLatest(books);
+        List<Book> testableBooks = bookFunctions.sortBooksByTheLatestBookWithStream(books);
         List<Book> testableBooksUsingStandardWay = bookFunctions.sortBooksByTheLatest(books);
         assertThat(testableBooks).isEqualTo(books.stream()
                 .sorted(Comparator.comparing(Book::getYear).reversed())
@@ -138,4 +145,24 @@ public class BookFunctionsTest {
                 .collect(Collectors.toList()));
     }
 
+    @Test
+    public void shouldReturnBooksWith100PlusYears() {
+        List<Book> testableBooks = bookFunctions.add100YearsToAllBooksWIthStream(books);
+        assertThat(testableBooks).isNotEqualTo(books);
+    }
+
+    @Test
+    public void shouldReturnAllBooksDividedByTwo() {
+        List<String> testableBooks = bookFunctions.returnBooksThatCanBeDividedByTwoWIthStream(books);
+        assertThat(testableBooks).isEqualTo(books.stream());
+
+    }
+
+    @Test
+    public void shouldReturnTheBooksSortedAlphabeticallyWithStream() {
+        List<Book> testableBooks = bookFunctions.sortBooksAlphabeticallyWithStream(books);
+        assertThat(testableBooks).isEqualTo(books.stream()
+                .sorted(Comparator.comparing(Book::getName))
+                .collect(Collectors.toList()));
+    }
 }

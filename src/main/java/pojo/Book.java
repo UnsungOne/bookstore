@@ -3,12 +3,14 @@ package pojo;
 
 import lombok.*;
 
-import java.util.Comparator;
 import java.util.List;
 
 @AllArgsConstructor
 @Data
 public class Book {
+
+    private static int count = 0;
+
     private int id;
     private String name;
     private int ISBN;

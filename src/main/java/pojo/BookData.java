@@ -23,4 +23,40 @@ public class BookData {
             INSTANCE = new BookData();
         return INSTANCE;
     }
+
+    public List<Book> printBooks() {
+
+        for (Book book : books)
+
+        {
+            System.out.println(book.toString());
+        }
+
+        System.out.println();
+        return books;
+    }
+
+    public List<Author> printAuthors() {
+
+        for (Author author : authors)
+
+        {
+            System.out.println(author.toString());
+        }
+
+        System.out.println();
+        return authors;
+    }
+
+    public List<Category> printCategories() {
+
+        for (Category category : categories) {
+            System.out.println(category.toString());
+        }
+
+        System.out.println();
+        return categories;
+    }
+
+
 }

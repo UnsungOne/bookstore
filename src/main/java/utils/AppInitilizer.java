@@ -1,66 +1,111 @@
 package utils;
 
+import pojo.Author;
 import pojo.BookData;
-import service.BookFunctions;
+import pojo.Category;
+import service.*;
 
-import java.io.IOException;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class AppInitilizer {
 
+    static Scanner scanner = new Scanner(System.in);
+    BookData bookData = BookData.getInstance();
+    ImportedDataManager importedDataManager = new ImportedDataManager();
+    BookFunctions bookFunctions = new BookFunctions();
+
+    BookPrinter bookPrinter = new PrintByTitle();
+
+
+    static void renderMenu() {
+
+        System.out.println("----------------------------------------------- \n" +
+                "Wybierz opcje programu: \n" +
+                "1 - Wyświetl książki\n" +
+                "2 - Wydrukuj autorów\n" +
+                "3 - Wydrukuj kategorie\n" +
+                "4 - Zsumuj lata \n" +
+                "5 - Policz średnią lat \n" +
+                "6 - Posortuj alfabetycznie \n" +
+                "7 - Sprawdź, czy istnieją ksiażki wydane przed 2003 \n" +
+                "8 - Dodaj nowego autora \n" +
+                "9 - Dodaj nową kategorie \n" +
+                "10 - Edytuj tytuł wybranej książki \n" +
+                "11 - Zwróć książki z kategorii: \"Wzorcee projektowe\" \n" +
+                "12 - Usuń książkę \n" +
+                "13 - Kolejność - ISBN \n" +
+                "14 - Kolejność - Rok \n" +
+                "15 - Kolejnoś - Tytuł \n" +
+                "16 - Zamknij program \n" +
+                "-----------------------------------------------");
+    }
+
     public void initiateApplication() {
-        BookFunctions bookFunctions = new BookFunctions();
-        CSVFileReader csvFileReader = new CSVFileReader();
-        Scanner scanner = new Scanner(System.in);
+
         boolean status = true;
-        String booksFile = "books.csv";
-        String authorFile = "authors.csv";
-        String categoryFile = "categories.csv";
-
         while (status) {
-            System.out.println("-------------------------- \n" +
-                    "Wybierz opcje programu: \n" +
-                    "1 - Wyświetl książki\n" +
-                    "2 - Wydrukuj autorów\n" +
-                    "3 - Wydrukuj kategorie\n" +
-                    "4 - Poszukaj po ISBN \n" +
-                    "5 - Zamyka program");
+            renderMenu();
             try {
-                int choices = scanner.nextInt();
+                String choices  = scanner.useDelimiter("\\n").next(); //TODO wywala sie na enterze
                 switch (choices) {
-                    case 1:
-                        try {
-                            BookData.getInstance().setBooks(csvFileReader.importBooksFromFile(booksFile));
-                        } catch (IOException e) {
-                            System.out.println("Brak pliku do książki");
-                        }
+                    case "1":
+                        bookPrinter.printBooks(bookFunctions.sortBooksAlphabeticallyWithStream(bookData.getBooks()));
                         break;
-                    case 2:
-                        try {
-                            BookData.getInstance().setAuthors(csvFileReader.importAuthorsFromFile(authorFile));
-                        } catch (IOException e) {
-                            System.out.println("Brak pliku do autorów");
-                        }
+                    case "2":
+                        BookData.getInstance().printAuthors();
                         break;
-                    case 3:
-                        try {
-                            BookData.getInstance().setCategories(csvFileReader.importCategoriesFromFile(categoryFile));
-                        } catch (IOException e) {
-                            System.out.println("Brak pliku do kategorii");
-                        }
+                    case "3":
+                        BookData.getInstance().printCategories();
                         break;
-
-                    case 4:
-                        System.out.println("");
+                    case "4":
+                        System.out.println(bookFunctions.returnSumOfAllYearsFromBookWithStream(bookData.getBooks()));
                         break;
-                    case 5:
+                    case "5":
+                        System.out.println(bookFunctions.returnAveragePublishYear(bookData.getBooks()));
+                        break;
+                    case "6":
+                        System.out.println(bookFunctions.sortBooksAlphabeticallyWithStream(bookData.getBooks()));
+                        break;
+                    case "7":
+                        System.out.println(bookFunctions.checkIfAnyBookHasBeenReleasedBefore2003(bookData.getBooks()));
+                        break;
+                    case "8":
+                        Author newAuthor = importedDataManager.createNewAuthor();
+                        BookData.getInstance().getAuthors().add(newAuthor);
+                        System.out.println("Nowy autor został dodany do listy.");
+                        break;
+                    case "9":
+                        Category newCategory = importedDataManager.createNewCategory();
+                        BookData.getInstance().getCategories().add(newCategory);
+                        System.out.println("Nowa kategoria została dodany do listy.");
+                        break;
+                    case "10":
+                        importedDataManager.editNameOfExistingBook();
+                        break;
+                    case "11":
+                        System.out.println(importedDataManager.returnAllBooksFromDefinedCategory());
+                        break;
+                    case "12":
+                        importedDataManager.removeExistingBook();
+                        break;
+                    case "13":
+                        bookPrinter = new PrintByISBN();
+                        break;
+                    case "14":
+                        bookPrinter = new PrintByYear();
+                        break;
+                    case "15":
+                        bookPrinter = new PrintByTitle();
+                        break;
+                    case "16":
                         status = false;
                         break;
                     default:
                         System.out.println();
                         break;
                 }
+
             } catch (InputMismatchException e) {
                 System.out.println("Nieprawidłowa wartość");
                 scanner.nextLine();

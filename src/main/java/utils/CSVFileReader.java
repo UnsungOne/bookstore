@@ -15,8 +15,10 @@ public class CSVFileReader {
 
         CSVReader csvReader;
         List<Category> categoryList = new ArrayList<>();
-        csvReader = new CSVReader(new FileReader(categoryFile), ';');
+        csvReader = new CSVReader(new FileReader(categoryFile), ';'); //TODO brakuje close na csvreader
         String[] fileLine;
+
+
         while ((fileLine = csvReader.readNext()) != null) {
             String number = fileLine[0];
             int numberInt = Integer.parseInt(number);
@@ -25,11 +27,7 @@ public class CSVFileReader {
             Category category = new Category(numberInt, fileLine[1], priorityInt);
             categoryList.add(category);
         }
-
-        for (Category category : categoryList) {
-            System.out.println(category.toString());
-        }
-        System.out.println();
+        csvReader.close();
         return categoryList;
     }
 
@@ -48,12 +46,7 @@ public class CSVFileReader {
             Author author = new Author(numberInt, fileLine[1], fileLine[2], ageInt);
             authorList.add(author);
         }
-
-
-        for (Author author : authorList) {
-            System.out.println(author.toString());
-        }
-        System.out.println();
+        csvReader.close();
         return authorList;
     }
 
@@ -61,9 +54,7 @@ public class CSVFileReader {
 
         CSVReader csvReader;
         List<Book> bookList = new ArrayList<>();
-        StringBuilder stringBuilder = new StringBuilder();
 
-        CoverType coverType = null;
         csvReader = new CSVReader(new FileReader(bookFile), ';');
         String[] fileLine;
         while ((fileLine = csvReader.readNext()) != null) {
@@ -75,7 +66,7 @@ public class CSVFileReader {
             int yearInt = Integer.parseInt(year);
             List<Author> authorList = new ArrayList<>();
 
-            //authors
+            //authors //TODO do metody
             String[] authorsArray = fileLine[6].split(",");
 
             for (String s : authorsArray) {
@@ -83,15 +74,15 @@ public class CSVFileReader {
 
                 List<Author> authorsInImport = BookData.getInstance().getAuthors();
 
-                for (int i = 0; i < authorsInImport.size(); i++) {
+                for (Author anAuthorsInImport : authorsInImport) {
 
-                    if (idAuthor == authorsInImport.get(i).getId()) {
-                        authorList.add(authorsInImport.get(i));
+                    if (idAuthor == anAuthorsInImport.getId()) {
+                        authorList.add(anAuthorsInImport);
                     }
                 }
             }
 
-            //cover
+            //cover //TODO metoda
             String stringcoverType = fileLine[5];
             CoverType finalCoverType;
             if (stringcoverType.equals(CoverType.T.name())) {
@@ -100,8 +91,11 @@ public class CSVFileReader {
                 finalCoverType = CoverType.M;
             }
 
-            //category
-            int exepctedID = Integer.parseInt(fileLine[6]) - 1;
+            //category //TODO metoda
+
+
+
+            int exepctedID = Integer.parseInt(fileLine[6]);
             Category category = null;
             for (Category cat : BookData.getInstance().getCategories()) {
                 if (exepctedID == cat.getID()) {
@@ -112,15 +106,7 @@ public class CSVFileReader {
             Book book = new Book(numberInt, fileLine[1], isbntobeadded, yearInt, finalCoverType, authorList, category);
             bookList.add(book);
         }
-
-
-        for (Book book : bookList)
-
-        {
-            System.out.println(book.toString());
-        }
-
-        System.out.println();
+        csvReader.close();
         return bookList;
     }
 }
