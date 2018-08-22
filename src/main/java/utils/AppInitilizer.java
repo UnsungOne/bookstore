@@ -17,10 +17,10 @@ public class AppInitilizer {
 
     BookPrinter bookPrinter = new PrintByTitle();
 
-
     static void renderMenu() {
-
         System.out.println("----------------------------------------------- \n" +
+                "Witaj, " + System.getProperty("user.name") + "\n" +
+                "\n" +
                 "Wybierz opcje programu: \n" +
                 "1 - Wyświetl książki\n" +
                 "2 - Wydrukuj autorów\n" +
@@ -37,7 +37,9 @@ public class AppInitilizer {
                 "13 - Kolejność - ISBN \n" +
                 "14 - Kolejność - Rok \n" +
                 "15 - Kolejnoś - Tytuł \n" +
-                "16 - Zamknij program \n" +
+                "16 - Edytuj wiek wybranej autora \n" +
+                "17 - Szukaj książki wybranego autora \n" +
+                "18 - Zamknij program \n" +
                 "-----------------------------------------------");
     }
 
@@ -99,8 +101,15 @@ public class AppInitilizer {
                         bookPrinter = new PrintByTitle();
                         break;
                     case "16":
+                         importedDataManager.editAgeOfExistingAuthor();
+                        break;
+                    case "17":
+                        importedDataManager.returnBookBasedOnAuthorID();
+                        break;
+                    case "18":
                         status = false;
                         break;
+
                     default:
                         System.out.println();
                         break;
