@@ -14,7 +14,7 @@ public class AppInitilizer {
     BookData bookData = BookData.getInstance();
     ImportedDataManager importedDataManager = new ImportedDataManager();
     BookFunctions bookFunctions = new BookFunctions();
-
+    ExportDataManager exportDataManager = new ExportDataManager();
     BookPrinter bookPrinter = new PrintByTitle();
 
     static void renderMenu() {
@@ -39,7 +39,13 @@ public class AppInitilizer {
                 "15 - Kolejnoś - Tytuł \n" +
                 "16 - Edytuj wiek wybranej autora \n" +
                 "17 - Szukaj książki wybranego autora \n" +
-                "18 - Zamknij program \n" +
+                "18 - Zapisz autorów do pliku \n" +
+                "19 - Zapisz kategorie do pliku \n" +
+                "20 - Wyświetl nazwiska i ilość publikacji \n" +
+                "21 - Edytuj nazwę wybranej kategorii \n" +
+                "22 - Zapisz ksiązki do pliku \n" +
+                "23 - Zapisz stan programu do pliku \n" +
+                "24 - Zamknij program \n" +
                 "-----------------------------------------------");
     }
 
@@ -49,7 +55,7 @@ public class AppInitilizer {
         while (status) {
             renderMenu();
             try {
-                String choices  = scanner.useDelimiter("\\n").next(); //TODO wywala sie na enterze
+                String choices = scanner.useDelimiter("\\n").next(); //TODO wywala sie na enterze
                 switch (choices) {
                     case "1":
                         bookPrinter.printBooks(bookFunctions.sortBooksAlphabeticallyWithStream(bookData.getBooks()));
@@ -101,15 +107,38 @@ public class AppInitilizer {
                         bookPrinter = new PrintByTitle();
                         break;
                     case "16":
-                         importedDataManager.editAgeOfExistingAuthor();
+                        importedDataManager.editAgeOfExistingAuthor();
                         break;
                     case "17":
-                        importedDataManager.returnBookBasedOnAuthorID();
+                        importedDataManager.printBookBasedOnAuthorName(importedDataManager.returnBookBasedOnAuthorName());
                         break;
                     case "18":
+                        exportDataManager.saveAuthorsToCSV(bookData.getAuthors());
+                        System.out.println("Plik został zapisany");
+                        break;
+                    case "19":
+                        exportDataManager.saveCategoriesToCSV(bookData.getCategories());
+                        System.out.println("Plik został zapisany");
+                        break;
+                    case "20":
+                        importedDataManager.printSurnameAndNumberOfPublishedBooks(importedDataManager.returnSurnameAndNumberOfPublishedBooks());
+                        break;
+                    case "21":
+                        importedDataManager.editNameOfExistingCategory();
+                        break;
+                    case "22":
+                        exportDataManager.saveBooksToCSV(bookData.getBooks());
+                        System.out.println("Plik został zapisany");
+                        break;
+                    case "23":
+                        exportDataManager.saveAuthorsToCSV(bookData.getAuthors());
+                        exportDataManager.saveCategoriesToCSV(bookData.getCategories());
+                        exportDataManager.saveBooksToCSV(bookData.getBooks());
+                        System.out.println("Zmiany zapisane");
+                        break;
+                    case "24":
                         status = false;
                         break;
-
                     default:
                         System.out.println();
                         break;

@@ -239,7 +239,6 @@ public class BookFunctions {
         return listOfNames;
     }
 
-
     public List<Book> sortBooksAlphabeticallyWithStream(List<Book> books) {
         return books.stream()
                 .sorted(Comparator.comparing(Book::getName))

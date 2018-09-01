@@ -67,15 +67,14 @@ public class CSVFileReader {
             List<Author> authorList = new ArrayList<>();
 
             //authors //TODO do metody
-            String[] authorsArray = fileLine[6].split(",");
 
+            String[] authorsArray = fileLine[5].split(",");
             for (String s : authorsArray) {
                 int idAuthor = Integer.parseInt(s);
 
                 List<Author> authorsInImport = BookData.getInstance().getAuthors();
 
                 for (Author anAuthorsInImport : authorsInImport) {
-
                     if (idAuthor == anAuthorsInImport.getId()) {
                         authorList.add(anAuthorsInImport);
                     }
@@ -83,7 +82,7 @@ public class CSVFileReader {
             }
 
             //cover //TODO metoda
-            String stringcoverType = fileLine[5];
+            String stringcoverType = fileLine[6];
             CoverType finalCoverType;
             if (stringcoverType.equals(CoverType.T.name())) {
                 finalCoverType = CoverType.T;
@@ -92,9 +91,6 @@ public class CSVFileReader {
             }
 
             //category //TODO metoda
-
-
-
             int exepctedID = Integer.parseInt(fileLine[6]);
             Category category = null;
             for (Category cat : BookData.getInstance().getCategories()) {

@@ -1,5 +1,6 @@
 package utils;
 
+
 import pojo.Author;
 import pojo.Book;
 import pojo.BookData;
@@ -7,14 +8,14 @@ import pojo.Category;
 
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 public class ImportedDataManager {
     static Scanner scanner = new Scanner(System.in);
 
-    public Author createNewAuthor() {
 
-        int newAuthorID = BookData.getInstance().getAuthors().size() + 1;
+    public Author createNewAuthor() {
+        List<Author> authors = BookData.getInstance().getAuthors();
+        int newAuthorID = authors.size() + 1;
         System.out.println("Podaj imię autora");
         String newAuthorName = scanner.useDelimiter("\\n").next();
         System.out.println("Podaj nazwisko autora");
@@ -161,33 +162,98 @@ public class ImportedDataManager {
 
     }
 
-    public List<Book> returnBookBasedOnAuthorID() {
-        List<Author> authors = BookData.getInstance().getAuthors();
+    public List<Book> returnBookBasedOnAuthorName() {
         List<Book> books = BookData.getInstance().getBooks();
-
-        System.out.println("Wybierz kryteria poszukiwań: ");
+        List<Book> finalBookList = new ArrayList<>();
         boolean isFound = false;
+        String userNameInput;
 
-        String name = scanner.nextLine();
-        List<Book> some = books.stream()
-                .filter(book -> book.getAuthors().stream()
-                        .anyMatch(author -> author.getName().equals(name)))
-                .collect(Collectors.toList());
-        isFound = true;
+        //STREAM
+//        List<Book> filteredBook = books.stream()
+//                .filter(book -> book.getAuthors().stream()
+//                        .anyMatch(author -> author.getName().equals(userNameInput)))
+//                .collect(Collectors.toList());
 
-        if (isFound == false) {
-            System.out.println("Nie znaleziono autora o imieniu " + name);
+        System.out.println("Podaje imię autora:");
+        userNameInput = scanner.next();
+        for (Book book : books) {
+            for (Author author : book.getAuthors()) {
+                if (author.getName().equalsIgnoreCase(userNameInput)) {
+                    finalBookList.add(book);
+                    isFound = true;
+                }
+            }
+
         }
 
+        if (isFound == false) {
+            System.out.println("Nie znaleziono autora o imieniu " + userNameInput);
+        }
 
-        for (Book book : some) {
+        return finalBookList;
+    }
+
+    public void printBookBasedOnAuthorName(List<Book> listToBePrinted) {
+        for (Book book : listToBePrinted) {
             System.out.println(book.toString());
 
         }
         System.out.println();
-
-        return some;
     }
 
 
+    public Map<String, Integer> returnSurnameAndNumberOfPublishedBooks() {
+        List<Book> books = BookData.getInstance().getBooks();
+
+        Map<String, Integer> listOfSurnameAndNumberOfPublishedBooks = new HashMap<>();
+        for (Book book : books) {
+            for (Author author : book.getAuthors()) {
+                Integer numberOfOccurence = listOfSurnameAndNumberOfPublishedBooks.get(author.getSurname());
+                listOfSurnameAndNumberOfPublishedBooks.put(author.getSurname(), (numberOfOccurence == null) ? 1 : numberOfOccurence + 1);
+            }
+
+        }
+
+        return listOfSurnameAndNumberOfPublishedBooks;
+    }
+
+    public void printSurnameAndNumberOfPublishedBooks(Map<String, Integer> mapToBePrinted) {
+
+        for (Map.Entry<String, Integer> suranmeAndNumberOfOccurences : mapToBePrinted.entrySet()) {
+            System.out.println(suranmeAndNumberOfOccurences.toString());
+        }
+
+        System.out.println();
+    }
+
+    public void editNameOfExistingCategory() {
+
+        List<Category> categories = BookData.getInstance().getCategories();
+        boolean isModified = false;
+        int userSearchedId;
+
+        do {
+            System.out.println("Podaj ID kategorii, którą chcesz edytować.");
+            while (!scanner.hasNextInt()) {
+                System.out.println("Nie wpisujesz liczby");
+                scanner.next();
+            }
+            userSearchedId = scanner.nextInt();
+        } while (userSearchedId <= 0);
+
+        for (int i = 0; i < categories.size(); i++) {
+            if (userSearchedId == categories.get(i).getID()) {
+                System.out.println("Podaj nową nazwę kategorii");
+                String userDefinedName = scanner.useDelimiter("\\n").next();
+                categories.get(i).setName(userDefinedName);
+                System.out.println("Nazwa kategorii o ID " + userSearchedId + " została zmieniona.");
+                isModified = true;
+            }
+        }
+
+        if (isModified == false) {
+            System.out.println("Brak kategorii o podanym ID: " + userSearchedId);
+        }
+
+    }
 }
